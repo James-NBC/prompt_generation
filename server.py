@@ -1,3 +1,4 @@
+import time
 import torch
 import argparse
 import numpy as np
@@ -30,13 +31,20 @@ def index():
 
 @app.route('/generate_prompt', methods=['POST'])
 def generate_prompt():
+    start = time.time()
     json_request = request.get_json(force=True)
     prompt = json_request['prompt']
-    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
-    outputs = model.generate(input_ids, pad_token_id=tokenizer.eos_token_id, max_length = 50)
+    output_path = json_request['output_path']
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+    outputs = model.generate(input_ids, pad_token_id=tokenizer.eos_token_id, max_length = 26)
     output_prompt = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # write to txt file
+    with open(output_path, 'w') as f:
+        f.write(output_prompt)
     torch.cuda.empty_cache()
-    return jsonify({"output_prompt": output_prompt})  
+    # sleep 2s
+    time.sleep(2)
+    return jsonify({"output_path": output_path, "time": time.time() - start})  
 
 if __name__ == "__main__":
     args = parse_args()
