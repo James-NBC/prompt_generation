@@ -14,6 +14,7 @@ def main():
     url = f"http://localhost:{args.port}/{API_NAME}"
     json_request = {
         "prompt": args.prompt,
+        "output_path": "output.txt",
     }
     response = requests.post(url, json=json_request)
     import json
