@@ -2,14 +2,12 @@
 # https://cog.run/python
 import os
 import json
-import torch
 from model import PromptGenerator
 from cog import BasePredictor, Input, BaseModel
 
 class PredictorOutput(BaseModel):
     output_path: str = ""
     magic_prompt: str = ""
-    logits: list = []
     
 class Predictor(BasePredictor):
     def setup(self) -> None:
@@ -28,5 +26,5 @@ class Predictor(BasePredictor):
         ),
     ) -> PredictorOutput:
         """Run a single prediction on the model"""
-        o_prompt, o_logits = self.model(prompt, output_path)
+        o_prompt = self.model(prompt, output_path)
         return PredictorOutput(output_path=output_path, magic_prompt=o_prompt)

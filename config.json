@@ -1,4 +1,4 @@
 {
-    "magic_prompt_ckpt": "checkpoints",
+    "magic_prompt_ckpt": "data/checkpoints",
     "max_length": 26
 }
